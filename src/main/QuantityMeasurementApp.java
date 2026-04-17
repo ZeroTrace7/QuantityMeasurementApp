@@ -1,5 +1,3 @@
-package com.zerotrace7.quantitymeasurement;
-
 import java.util.Objects;
 
 public class QuantityMeasurementApp {
