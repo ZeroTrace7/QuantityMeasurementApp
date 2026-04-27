@@ -45,8 +45,8 @@ public final class QuantityLength {
         validateValue(value);
         LengthUnit validatedSource = validateUnit(source, "sourceUnit");
         LengthUnit validatedTarget = validateUnit(target, "targetUnit");
-        double baseValueInFeet = toBaseUnit(value, validatedSource);
-        return fromBaseUnit(baseValueInFeet, validatedTarget);
+        double baseValueInFeet = validatedSource.convertToBaseUnit(value);
+        return validatedTarget.convertFromBaseUnit(baseValueInFeet);
     }
 
     /**
@@ -144,15 +144,7 @@ public final class QuantityLength {
     }
 
     private double toBaseUnit() {
-        return toBaseUnit(value, unit);
-    }
-
-    private static double toBaseUnit(double value, LengthUnit unit) {
-        return value * unit.getConversionFactor();
-    }
-
-    private static double fromBaseUnit(double baseValue, LengthUnit unit) {
-        return baseValue / unit.getConversionFactor();
+        return unit.convertToBaseUnit(value);
     }
 
     private static void validateValue(double value) {
@@ -181,7 +173,7 @@ public final class QuantityLength {
         LengthUnit targetUnit
     ) {
         double sumInBaseUnit = firstQuantity.toBaseUnit() + secondQuantity.toBaseUnit();
-        double valueInTargetUnit = fromBaseUnit(sumInBaseUnit, targetUnit);
+        double valueInTargetUnit = targetUnit.convertFromBaseUnit(sumInBaseUnit);
         return new QuantityLength(valueInTargetUnit, targetUnit);
     }
 }

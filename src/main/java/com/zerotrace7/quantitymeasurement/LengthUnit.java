@@ -20,4 +20,34 @@ public enum LengthUnit {
     public double getConversionFactor() {
         return conversionFactor;
     }
+
+    /**
+     * Converts a value expressed in this unit to the shared base unit of feet.
+     *
+     * @param value value in this unit
+     * @return equivalent value in feet
+     * @throws IllegalArgumentException when the value is not finite
+     */
+    public double convertToBaseUnit(double value) {
+        validateFinite(value);
+        return value * conversionFactor;
+    }
+
+    /**
+     * Converts a value expressed in the shared base unit of feet to this unit.
+     *
+     * @param baseValue value in feet
+     * @return equivalent value in this unit
+     * @throws IllegalArgumentException when the value is not finite
+     */
+    public double convertFromBaseUnit(double baseValue) {
+        validateFinite(baseValue);
+        return baseValue / conversionFactor;
+    }
+
+    private static void validateFinite(double value) {
+        if (!Double.isFinite(value)) {
+            throw new IllegalArgumentException("value must be finite");
+        }
+    }
 }

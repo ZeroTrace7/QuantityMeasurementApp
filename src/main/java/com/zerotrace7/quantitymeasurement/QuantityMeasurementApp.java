@@ -18,6 +18,8 @@ public class QuantityMeasurementApp {
             new QuantityLength(1.0, LengthUnit.YARDS),
             LengthUnit.FEET
         );
+        demonstrateBaseUnitConversion(LengthUnit.FEET, 12.0);
+        demonstrateBaseUnitConversion(LengthUnit.INCHES, 12.0);
     }
 
     /**
@@ -119,5 +121,12 @@ public class QuantityMeasurementApp {
     ) {
         QuantityLength sum = firstLength.add(secondLength, targetUnit);
         System.out.println("add(" + firstLength + ", " + secondLength + ", " + targetUnit + ") = " + sum);
+    }
+
+    /**
+     * Demonstrates direct access to the standalone unit conversion API.
+     */
+    public static void demonstrateBaseUnitConversion(LengthUnit unit, double value) {
+        System.out.println(unit + ".convertToBaseUnit(" + value + ") = " + unit.convertToBaseUnit(value));
     }
 }
