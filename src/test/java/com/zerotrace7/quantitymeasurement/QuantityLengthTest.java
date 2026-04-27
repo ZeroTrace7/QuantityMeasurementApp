@@ -85,4 +85,116 @@ class QuantityLengthTest {
         assertThrows(IllegalArgumentException.class, () -> QuantityLength.convert(Double.POSITIVE_INFINITY, LengthUnit.FEET, LengthUnit.INCHES));
         assertThrows(IllegalArgumentException.class, () -> new QuantityLength(Double.NEGATIVE_INFINITY, LengthUnit.FEET));
     }
+
+    @Test
+    void testAdditionSameUnitFeetPlusFeet() {
+        QuantityLength sum = QuantityLength.add(
+            new QuantityLength(1.0, LengthUnit.FEET),
+            new QuantityLength(2.0, LengthUnit.FEET),
+            LengthUnit.FEET
+        );
+        assertEquals(3.0, sum.getValue(), EPSILON);
+        assertEquals(LengthUnit.FEET, sum.getUnit());
+    }
+
+    @Test
+    void testAdditionSameUnitInchesPlusInches() {
+        QuantityLength sum = QuantityLength.add(
+            new QuantityLength(6.0, LengthUnit.INCHES),
+            new QuantityLength(6.0, LengthUnit.INCHES),
+            LengthUnit.INCHES
+        );
+        assertEquals(12.0, sum.getValue(), EPSILON);
+        assertEquals(LengthUnit.INCHES, sum.getUnit());
+    }
+
+    @Test
+    void testAdditionCrossUnitFeetPlusInches() {
+        QuantityLength sum = new QuantityLength(1.0, LengthUnit.FEET).add(new QuantityLength(12.0, LengthUnit.INCHES));
+        assertEquals(2.0, sum.getValue(), EPSILON);
+        assertEquals(LengthUnit.FEET, sum.getUnit());
+    }
+
+    @Test
+    void testAdditionCrossUnitInchesPlusFeet() {
+        QuantityLength sum = new QuantityLength(12.0, LengthUnit.INCHES).add(new QuantityLength(1.0, LengthUnit.FEET));
+        assertEquals(24.0, sum.getValue(), EPSILON);
+        assertEquals(LengthUnit.INCHES, sum.getUnit());
+    }
+
+    @Test
+    void testAdditionCrossUnitYardsPlusFeet() {
+        QuantityLength sum = new QuantityLength(1.0, LengthUnit.YARDS).add(new QuantityLength(3.0, LengthUnit.FEET));
+        assertEquals(2.0, sum.getValue(), EPSILON);
+        assertEquals(LengthUnit.YARDS, sum.getUnit());
+    }
+
+    @Test
+    void testAdditionCrossUnitCentimetersPlusInches() {
+        QuantityLength sum = new QuantityLength(2.54, LengthUnit.CENTIMETERS).add(new QuantityLength(1.0, LengthUnit.INCHES));
+        assertEquals(5.08, sum.getValue(), EPSILON);
+        assertEquals(LengthUnit.CENTIMETERS, sum.getUnit());
+    }
+
+    @Test
+    void testAdditionCommutativity() {
+        QuantityLength firstOrder = QuantityLength.add(
+            new QuantityLength(1.0, LengthUnit.FEET),
+            new QuantityLength(12.0, LengthUnit.INCHES),
+            LengthUnit.FEET
+        );
+        QuantityLength secondOrder = QuantityLength.add(
+            new QuantityLength(12.0, LengthUnit.INCHES),
+            new QuantityLength(1.0, LengthUnit.FEET),
+            LengthUnit.FEET
+        );
+        assertEquals(firstOrder.getValue(), secondOrder.getValue(), EPSILON);
+        assertEquals(firstOrder.getUnit(), secondOrder.getUnit());
+        assertTrue(firstOrder.equals(secondOrder));
+    }
+
+    @Test
+    void testAdditionWithZero() {
+        QuantityLength sum = new QuantityLength(5.0, LengthUnit.FEET).add(new QuantityLength(0.0, LengthUnit.INCHES));
+        assertEquals(5.0, sum.getValue(), EPSILON);
+        assertEquals(LengthUnit.FEET, sum.getUnit());
+    }
+
+    @Test
+    void testAdditionNegativeValues() {
+        QuantityLength sum = new QuantityLength(5.0, LengthUnit.FEET).add(new QuantityLength(-2.0, LengthUnit.FEET));
+        assertEquals(3.0, sum.getValue(), EPSILON);
+        assertEquals(LengthUnit.FEET, sum.getUnit());
+    }
+
+    @Test
+    void testAdditionNullSecondOperandThrows() {
+        assertThrows(IllegalArgumentException.class, () -> new QuantityLength(1.0, LengthUnit.FEET).add(null));
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> QuantityLength.add(new QuantityLength(1.0, LengthUnit.FEET), null, LengthUnit.FEET)
+        );
+    }
+
+    @Test
+    void testAdditionLargeValues() {
+        QuantityLength sum = new QuantityLength(1.0e6, LengthUnit.FEET).add(new QuantityLength(1.0e6, LengthUnit.FEET));
+        assertEquals(2.0e6, sum.getValue(), EPSILON);
+        assertEquals(LengthUnit.FEET, sum.getUnit());
+    }
+
+    @Test
+    void testAdditionSmallValues() {
+        QuantityLength sum = new QuantityLength(0.001, LengthUnit.FEET).add(new QuantityLength(0.002, LengthUnit.FEET));
+        assertEquals(0.003, sum.getValue(), EPSILON);
+        assertEquals(LengthUnit.FEET, sum.getUnit());
+    }
+
+    @Test
+    void testAdditionInvalidTargetUnitThrows() {
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> QuantityLength.add(new QuantityLength(1.0, LengthUnit.FEET), new QuantityLength(2.0, LengthUnit.FEET), null)
+        );
+    }
 }

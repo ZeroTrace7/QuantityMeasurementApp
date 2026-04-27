@@ -59,6 +59,59 @@ public final class QuantityLength {
         return new QuantityLength(convert(value, unit, targetUnit), targetUnit);
     }
 
+    /**
+     * Adds two quantity lengths and returns the result in the supplied target unit.
+     *
+     * @param first first quantity operand
+     * @param second second quantity operand
+     * @param targetUnit unit for the returned result
+     * @return new quantity containing the sum in the target unit
+     * @throws IllegalArgumentException when either operand is null or the target unit is null
+     */
+    public static QuantityLength add(QuantityLength first, QuantityLength second, LengthUnit targetUnit) {
+        QuantityLength validatedFirst = validateQuantity(first, "firstLength");
+        QuantityLength validatedSecond = validateQuantity(second, "secondLength");
+        LengthUnit validatedTargetUnit = validateUnit(targetUnit, "targetUnit");
+
+        double sumInBaseUnit = validatedFirst.toBaseUnit() + validatedSecond.toBaseUnit();
+        double valueInTargetUnit = fromBaseUnit(sumInBaseUnit, validatedTargetUnit);
+        return new QuantityLength(valueInTargetUnit, validatedTargetUnit);
+    }
+
+    /**
+     * Adds two raw length values and returns the result in the supplied target unit.
+     *
+     * @param firstValue first numeric value
+     * @param firstUnit first unit
+     * @param secondValue second numeric value
+     * @param secondUnit second unit
+     * @param targetUnit unit for the returned result
+     * @return new quantity containing the sum in the target unit
+     */
+    public static QuantityLength add(
+        double firstValue,
+        LengthUnit firstUnit,
+        double secondValue,
+        LengthUnit secondUnit,
+        LengthUnit targetUnit
+    ) {
+        return add(
+            new QuantityLength(firstValue, firstUnit),
+            new QuantityLength(secondValue, secondUnit),
+            targetUnit
+        );
+    }
+
+    /**
+     * Adds another quantity to this one and returns the sum in this instance's unit.
+     *
+     * @param other second quantity operand
+     * @return new quantity containing the sum in this instance's unit
+     */
+    public QuantityLength add(QuantityLength other) {
+        return add(this, other, unit);
+    }
+
     @Override
     public boolean equals(Object other) {
         if (this == other) {
@@ -105,5 +158,12 @@ public final class QuantityLength {
             throw new IllegalArgumentException(unitName + " must not be null");
         }
         return unit;
+    }
+
+    private static QuantityLength validateQuantity(QuantityLength quantityLength, String name) {
+        if (quantityLength == null) {
+            throw new IllegalArgumentException(name + " must not be null");
+        }
+        return quantityLength;
     }
 }
