@@ -12,6 +12,12 @@ public class QuantityMeasurementApp {
         demonstrateLengthComparison(3.0, LengthUnit.FEET, 1.0, LengthUnit.YARDS);
         demonstrateLengthAddition(1.0, LengthUnit.FEET, 12.0, LengthUnit.INCHES);
         demonstrateLengthAddition(new QuantityLength(12.0, LengthUnit.INCHES), new QuantityLength(1.0, LengthUnit.FEET));
+        demonstrateLengthAddition(1.0, LengthUnit.FEET, 12.0, LengthUnit.INCHES, LengthUnit.YARDS);
+        demonstrateLengthAddition(
+            new QuantityLength(36.0, LengthUnit.INCHES),
+            new QuantityLength(1.0, LengthUnit.YARDS),
+            LengthUnit.FEET
+        );
     }
 
     /**
@@ -78,5 +84,40 @@ public class QuantityMeasurementApp {
     public static void demonstrateLengthAddition(QuantityLength firstLength, QuantityLength secondLength) {
         QuantityLength sum = firstLength.add(secondLength);
         System.out.println("add(" + firstLength + ", " + secondLength + ") = " + sum);
+    }
+
+    /**
+     * Demonstrates adding two raw length values and returning the result in an explicit target unit.
+     */
+    public static void demonstrateLengthAddition(
+        double firstValue,
+        LengthUnit firstUnit,
+        double secondValue,
+        LengthUnit secondUnit,
+        LengthUnit targetUnit
+    ) {
+        QuantityLength sum = QuantityLength.add(firstValue, firstUnit, secondValue, secondUnit, targetUnit);
+        System.out.println(
+            "add("
+                + new QuantityLength(firstValue, firstUnit)
+                + ", "
+                + new QuantityLength(secondValue, secondUnit)
+                + ", "
+                + targetUnit
+                + ") = "
+                + sum
+        );
+    }
+
+    /**
+     * Demonstrates adding two quantity lengths and returning the result in an explicit target unit.
+     */
+    public static void demonstrateLengthAddition(
+        QuantityLength firstLength,
+        QuantityLength secondLength,
+        LengthUnit targetUnit
+    ) {
+        QuantityLength sum = firstLength.add(secondLength, targetUnit);
+        System.out.println("add(" + firstLength + ", " + secondLength + ", " + targetUnit + ") = " + sum);
     }
 }

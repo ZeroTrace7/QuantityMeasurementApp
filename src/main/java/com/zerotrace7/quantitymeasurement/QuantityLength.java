@@ -72,10 +72,7 @@ public final class QuantityLength {
         QuantityLength validatedFirst = validateQuantity(first, "firstLength");
         QuantityLength validatedSecond = validateQuantity(second, "secondLength");
         LengthUnit validatedTargetUnit = validateUnit(targetUnit, "targetUnit");
-
-        double sumInBaseUnit = validatedFirst.toBaseUnit() + validatedSecond.toBaseUnit();
-        double valueInTargetUnit = fromBaseUnit(sumInBaseUnit, validatedTargetUnit);
-        return new QuantityLength(valueInTargetUnit, validatedTargetUnit);
+        return addInTargetUnit(validatedFirst, validatedSecond, validatedTargetUnit);
     }
 
     /**
@@ -110,6 +107,17 @@ public final class QuantityLength {
      */
     public QuantityLength add(QuantityLength other) {
         return add(this, other, unit);
+    }
+
+    /**
+     * Adds another quantity to this one and returns the sum in the specified target unit.
+     *
+     * @param other second quantity operand
+     * @param targetUnit unit for the returned result
+     * @return new quantity containing the sum in the target unit
+     */
+    public QuantityLength add(QuantityLength other, LengthUnit targetUnit) {
+        return add(this, other, targetUnit);
     }
 
     @Override
@@ -165,5 +173,15 @@ public final class QuantityLength {
             throw new IllegalArgumentException(name + " must not be null");
         }
         return quantityLength;
+    }
+
+    private static QuantityLength addInTargetUnit(
+        QuantityLength firstQuantity,
+        QuantityLength secondQuantity,
+        LengthUnit targetUnit
+    ) {
+        double sumInBaseUnit = firstQuantity.toBaseUnit() + secondQuantity.toBaseUnit();
+        double valueInTargetUnit = fromBaseUnit(sumInBaseUnit, targetUnit);
+        return new QuantityLength(valueInTargetUnit, targetUnit);
     }
 }
