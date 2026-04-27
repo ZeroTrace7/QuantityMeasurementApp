@@ -20,6 +20,14 @@ public class QuantityMeasurementApp {
         );
         demonstrateBaseUnitConversion(LengthUnit.FEET, 12.0);
         demonstrateBaseUnitConversion(LengthUnit.INCHES, 12.0);
+        demonstrateWeightConversion(1.0, WeightUnit.KILOGRAM, WeightUnit.GRAM);
+        demonstrateWeightComparison(1.0, WeightUnit.KILOGRAM, 1000.0, WeightUnit.GRAM);
+        demonstrateWeightAddition(1.0, WeightUnit.KILOGRAM, 1000.0, WeightUnit.GRAM);
+        demonstrateWeightAddition(
+            new QuantityWeight(1.0, WeightUnit.POUND),
+            new QuantityWeight(453.592, WeightUnit.GRAM),
+            WeightUnit.POUND
+        );
     }
 
     /**
@@ -128,5 +136,60 @@ public class QuantityMeasurementApp {
      */
     public static void demonstrateBaseUnitConversion(LengthUnit unit, double value) {
         System.out.println(unit + ".convertToBaseUnit(" + value + ") = " + unit.convertToBaseUnit(value));
+    }
+
+    /**
+     * Demonstrates converting a raw numeric weight value from one unit to another.
+     */
+    public static void demonstrateWeightConversion(double value, WeightUnit fromUnit, WeightUnit toUnit) {
+        QuantityWeight sourceWeight = new QuantityWeight(value, fromUnit);
+        QuantityWeight convertedWeight = sourceWeight.convertTo(toUnit);
+        System.out.println(sourceWeight + " -> " + convertedWeight);
+    }
+
+    /**
+     * Demonstrates equality comparison between two raw weight values.
+     */
+    public static void demonstrateWeightComparison(
+        double firstValue,
+        WeightUnit firstUnit,
+        double secondValue,
+        WeightUnit secondUnit
+    ) {
+        QuantityWeight firstWeight = new QuantityWeight(firstValue, firstUnit);
+        QuantityWeight secondWeight = new QuantityWeight(secondValue, secondUnit);
+        System.out.println(firstWeight + " equals " + secondWeight + " = " + firstWeight.equals(secondWeight));
+    }
+
+    /**
+     * Demonstrates adding two raw weight values and returning the result in the first unit.
+     */
+    public static void demonstrateWeightAddition(
+        double firstValue,
+        WeightUnit firstUnit,
+        double secondValue,
+        WeightUnit secondUnit
+    ) {
+        QuantityWeight sum = QuantityWeight.add(firstValue, firstUnit, secondValue, secondUnit, firstUnit);
+        System.out.println(
+            "add("
+                + new QuantityWeight(firstValue, firstUnit)
+                + ", "
+                + new QuantityWeight(secondValue, secondUnit)
+                + ") = "
+                + sum
+        );
+    }
+
+    /**
+     * Demonstrates adding two quantity weights and returning the result in an explicit target unit.
+     */
+    public static void demonstrateWeightAddition(
+        QuantityWeight firstWeight,
+        QuantityWeight secondWeight,
+        WeightUnit targetUnit
+    ) {
+        QuantityWeight sum = firstWeight.add(secondWeight, targetUnit);
+        System.out.println("add(" + firstWeight + ", " + secondWeight + ", " + targetUnit + ") = " + sum);
     }
 }
